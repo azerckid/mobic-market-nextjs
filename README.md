@@ -64,5 +64,5 @@ npx prisma studio
 ```
 
 ```
-
+npx prisma format
 ```
