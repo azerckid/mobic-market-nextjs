@@ -5,6 +5,7 @@ import Button from "@components/button";
 import Input from "@components/input";
 import useMutation from "@libs/client/useMutation";
 import { cls } from "@libs/client/utils";
+
 interface EnterForm {
   email?: string;
   phone?: string;
@@ -14,6 +15,7 @@ const Enter: NextPage = () => {
   const [enter, { loading, data, error }] = useMutation("/api/users/enter");
   const { register, handleSubmit, reset } = useForm<EnterForm>();
   const [method, setMethod] = useState<"email" | "phone">("email");
+
   const onEmailClick = () => {
     reset();
     setMethod("email");

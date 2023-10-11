@@ -8,18 +8,6 @@ async function handler(
 ) {
   console.log(req.body);
   const { phone, email } = req.body;
-  // const payload = phone ? { phone: +phone } : { email };
-  // const user = await client.user.upsert({
-  //   where: {
-  //     ...payload,
-  //   },
-  //   create: {
-  //     name: "Anonymous",
-  //     ...payload,
-  //   },
-  //   update: {},
-  // });
-  // console.log(user);
   const user = phone ? { phone: +phone } : email ? { email } : null;
   if (!user) {
     return res.status(400).json({
