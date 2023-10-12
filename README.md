@@ -68,6 +68,5 @@ npx prisma format
 ```
 
 ```
-ACb11864bfff728005e0a59c669782afcf
-b62dc8098801abd9fb0e9e3b4fd4dfe8
+
 ```
