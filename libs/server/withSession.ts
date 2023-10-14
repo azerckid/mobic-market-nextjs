@@ -10,8 +10,8 @@ declare module "iron-session" {
 }
 
 const cookieConfig: IronSessionOptions = {
-  cookieName: "carrotsession",
-  password: process.env.COOKIE_PASSWORD!,
+  cookieName: "mobic-market-session",
+  password: process.env.SECRET_COOKIE_PASSWORD!,
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",
   },

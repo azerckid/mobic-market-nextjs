@@ -1,7 +1,7 @@
-import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import client from "@libs/server/client";
+import { withApiSession } from "@libs/server/withSession";
 
 async function handler(
   req: NextApiRequest,
@@ -17,7 +17,7 @@ async function handler(
       error: "No token provided",
     });
   }
-  const exist = await client.token.findUnique({
+  const foundToken = await client.token.findUnique({
     where: {
       payload: token,
     },
@@ -25,21 +25,25 @@ async function handler(
       user: true,
     },
   });
-  if (!exist) {
+  if (!foundToken) {
     return res.status(400).json({
       ok: false,
       error: "Token not found",
     });
   }
-  console.log(exist);
+  console.log(foundToken);
   req.session.user = {
-    id: exist.user.id,
+    id: foundToken.user.id,
   };
   await req.session.save();
-  res.status(200).end();
+  await client.token.deleteMany({
+    where: {
+      userId: foundToken.user.id,
+    },
+  });
+  res.status(200).json({
+    ok: true,
+  });
 }
 
-export default withIronSessionApiRoute(withHandler("POST", handler), {
-  cookieName: "mobicSession",
-  password: process.env.SECRET_COOKIE_PASSWORD!,
-});
+export default withApiSession(withHandler("POST", handler));
