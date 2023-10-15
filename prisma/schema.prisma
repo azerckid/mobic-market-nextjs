@@ -12,15 +12,16 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String?  @unique
+  id        Int       @id @default(autoincrement())
+  email     String?   @unique
   name      String?
   password  String?
-  phone     String?  @unique
-  avatar    String?  @default("https://res.cloudinary.com/dxqnb8xjb/image/upload/v1623778859/avatars/default-avatar.png")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  phone     String?   @unique
+  avatar    String?   @default("https://res.cloudinary.com/dxqnb8xjb/image/upload/v1623778859/avatars/default-avatar.png")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   tokens    Token[]
+  products  Product[]
 }
 
 model Token {
@@ -30,6 +31,20 @@ model Token {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  image       String
+  name        String
+  price       Int
+  description String   @db.MediumText
 
   @@index([userId])
 }
