@@ -10,7 +10,11 @@ async function handler(
   if (req.method === "GET") {
     const products = await client.product.findMany({
       include: {
-        user: true,
+        _count: {
+          select: {
+            fav: true,
+          },
+        },
       },
     });
     return res.json({
