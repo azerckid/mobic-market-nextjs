@@ -7,24 +7,28 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  console.log(req.session.user);
-  const profile = await client.user.findUnique({
+  const { id } = req.query;
+  const product = await client.product.findUnique({
     where: {
-      id: req.session.user?.id,
+      id: Number(id),
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+        },
+      },
     },
   });
-  if (!profile) {
-    return res.status(400).json({
-      ok: false,
-      error: "Profile not found",
-    });
-  }
-  return res.status(200).json({
-    ok: true,
-    profile,
-  });
+  console.log(product);
+  res.json({ ok: true, product });
 }
 
 export default withApiSession(
-  withHandler({ methods: ["GET"], handler, isPrivate: true })
+  withHandler({
+    methods: ["GET"],
+    handler,
+  })
 );

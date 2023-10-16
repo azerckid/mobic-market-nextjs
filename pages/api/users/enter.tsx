@@ -13,7 +13,7 @@ async function handler(
 ) {
   console.log(req.body);
   const { phone, email } = req.body;
-  const user = phone ? { phone: +phone } : email ? { email } : null;
+  const user = phone ? { phone } : email ? { email } : null;
   if (!user) {
     return res.status(400).json({
       ok: false,
@@ -63,4 +63,4 @@ async function handler(
   });
 }
 
-export default withHandler({ method: "POST", handler, isPrivate: false });
+export default withHandler({ methods: ["POST"], handler, isPrivate: false });
