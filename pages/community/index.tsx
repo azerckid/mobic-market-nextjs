@@ -5,7 +5,7 @@ import Layout from "../../components/layout";
 
 const Community: NextPage = () => {
   return (
-    <Layout hasTabBar title="동네생활">
+    <Layout hasTabBar title="모빅 라이프">
       <div className="space-y-4 divide-y-[2px]">
         {[1, 2, 3, 4, 5, 6].map((_, i) => (
           <Link
@@ -14,7 +14,7 @@ const Community: NextPage = () => {
             className="flex cursor-pointer flex-col pt-4 items-start"
           >
             <span className="flex ml-4 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-              동네질문
+              모빅 질문
             </span>
             <div className="mt-2 px-4 text-gray-700">
               <span className="text-orange-500 font-medium">Q.</span> What is
