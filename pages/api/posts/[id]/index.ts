@@ -10,6 +10,7 @@ async function handler(
 ) {
   const {
     query: { id },
+    session: { user },
   } = req;
   const post = await client.post.findUnique({
     where: {
@@ -44,9 +45,22 @@ async function handler(
       },
     },
   });
+  if (!post) res.status(404).json({ ok: false, error: "Not found post" });
+  const isWondering = Boolean(
+    await client.wondering.findFirst({
+      where: {
+        postId: Number(id),
+        userId: user?.id,
+      },
+      select: {
+        id: true,
+      },
+    })
+  );
   return res.status(200).json({
     ok: true,
     post,
+    isWondering,
   });
 }
 
