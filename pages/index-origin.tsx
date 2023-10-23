@@ -1,49 +1,40 @@
 import type { NextPage } from "next";
-import FloatingButton from "@components/floating-button";
-import Item from "@components/item";
-import Layout from "@components/layout";
+import FloatingButton from "../components/floating-button";
+import Item from "../components/item";
+import Layout from "../components/layout";
+import useUser from "@libs/client/useUser";
 import Head from "next/head";
-import useSWRInfinite from "swr/infinite";
-import { Product, Record } from "@prisma/client";
-import { useEffect } from "react";
-import { useInfiniteScroll } from "@libs/client/useInfiniteScroll";
+import useSWR from "swr";
+import { Product } from "@prisma/client";
 
 export interface ProductWithCount extends Product {
-  records: Record[];
+  _count: {
+    fav: number;
+  };
 }
 interface ProductsResponse {
   ok: boolean;
   products: ProductWithCount[];
-  pages: number;
 }
-const getKey = (pageIndex: number, previousPageData: ProductsResponse) => {
-  if (pageIndex === 0) return `/api/products?page=1`;
-  if (pageIndex + 1 > previousPageData.pages) return null;
-  return `/api/products?page=${pageIndex + 1}`;
-};
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const Home: NextPage = () => {
-  const { data, setSize } = useSWRInfinite<ProductsResponse>(getKey, fetcher);
-  const products = data ? data.map((item) => item.products).flat() : [];
-  const page = useInfiniteScroll();
-  useEffect(() => {
-    setSize(page);
-  }, [setSize, page]);
+  const { user, isLoading } = useUser();
+  console.log(user);
+  const { data } = useSWR<ProductsResponse>("/api/products");
+  console.log(data);
   return (
     <Layout title="홈" hasTabBar>
       <Head>
-        <title>Home</title>
+        <title>HOME</title>
       </Head>
       <div className="flex flex-col space-y-5 divide-y">
-        {products.map((product) => (
+        {data?.products?.map((product) => (
           <Item
             id={product.id}
             key={product.id}
             title={product.name}
             price={product.price}
-            comments={1}
-            hearts={product.records?.length}
+            hearts={product._count.fav}
           />
         ))}
         <FloatingButton href="/products/upload">
