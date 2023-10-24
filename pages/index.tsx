@@ -7,8 +7,8 @@ import useSWRInfinite from "swr/infinite";
 import { Product, Record } from "@prisma/client";
 import { useEffect } from "react";
 import { useInfiniteScroll } from "@libs/client/useInfiniteScroll";
-import Image from "next/image";
-import riceCake from "../public/local.jpeg";
+// import Image from "next/image";
+// import riceCake from "../public/local.jpeg";
 
 export interface ProductWithCount extends Product {
   records: Record[];
@@ -66,7 +66,7 @@ const Home: NextPage = () => {
           </svg>
         </FloatingButton>
       </div>
-      <Image src={riceCake} placeholder="blur" quality={5} alt="riceCake" />
+      {/* <Image src={riceCake} placeholder="blur" quality={5} alt="riceCake" /> */}
     </Layout>
   );
 };
