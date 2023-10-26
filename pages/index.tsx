@@ -7,6 +7,7 @@ import useSWRInfinite from "swr/infinite";
 import { Product, Record } from "@prisma/client";
 import { useEffect } from "react";
 import { useInfiniteScroll } from "@libs/client/useInfiniteScroll";
+import client from "@libs/server/client";
 // import Image from "next/image";
 // import riceCake from "../public/local.jpeg";
 
@@ -25,20 +26,20 @@ const getKey = (pageIndex: number, previousPageData: ProductsResponse) => {
 };
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const Home: NextPage = () => {
+const Home: NextPage<{ products: ProductWithCount[] }> = ({ products }) => {
   const { data, setSize } = useSWRInfinite<ProductsResponse>(getKey, fetcher);
-  const products = data ? data.map((item) => item.products).flat() : [];
+  // const products = data ? data.map((item) => item.products).flat() : [];
   const page = useInfiniteScroll();
   useEffect(() => {
     setSize(page);
   }, [setSize, page]);
   return (
-    <Layout title="홈" hasTabBar>
+    <Layout title="홈" hasTabBar seoTitle={""}>
       <Head>
         <title>Home</title>
       </Head>
       <div className="flex flex-col space-y-5 divide-y">
-        {products.map((product) => (
+        {products?.map((product) => (
           <Item
             id={product.id}
             key={product.id}
@@ -46,6 +47,7 @@ const Home: NextPage = () => {
             price={product.price}
             comments={1}
             hearts={product.records?.length}
+            image={product.image}
           />
         ))}
         <FloatingButton href="/products/upload">
@@ -70,4 +72,14 @@ const Home: NextPage = () => {
     </Layout>
   );
 };
+
+export async function getServerSideProps() {
+  const products = await client.product.findMany({});
+  return {
+    props: {
+      products: JSON.parse(JSON.stringify(products)),
+    },
+  };
+}
+
 export default Home;
